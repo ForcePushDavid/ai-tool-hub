@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function Navbar() {
+export default function Navbar({ role }) {
   const pathname = usePathname();
 
   return (
@@ -25,9 +25,11 @@ export default function Navbar() {
         >
           🔒 Security Check
         </Link>
-        <Link href="/tools/new" className="btn btn-primary btn-sm">
-          + Přidat nástroj
-        </Link>
+        {role === 'admin' && (
+          <Link href="/tools/new" className="btn btn-primary btn-sm">
+            + Přidat nástroj
+          </Link>
+        )}
         <button onClick={async () => {
           const { logout } = await import('@/app/login/actions');
           await logout();

@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { getUserRole } from '@/utils/auth';
+import { createClient } from '@/utils/supabase/server';
 
 // GET /api/tools - list all tools
 export async function GET(request) {
@@ -33,9 +35,15 @@ export async function GET(request) {
 // POST /api/tools - create new tool
 export async function POST(request) {
   try {
+    const role = await getUserRole();
+    if (role !== 'admin') {
+      return NextResponse.json({ error: 'Přístup odepřen: Nástroje mohou přidávat pouze administrátoři.' }, { status: 403 });
+    }
+
+    const supabaseServer = await createClient();
     const body = await request.json();
     
-    const { data, error } = await supabase
+    const { data, error } = await supabaseServer
       .from('tools')
       .insert([{
         name: body.name,

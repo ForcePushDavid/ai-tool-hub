@@ -1,10 +1,17 @@
 import ToolForm from '@/components/ToolForm';
+import { getUserRole } from '@/utils/auth';
+import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: 'Přidat nástroj | AI Tool Hub',
 };
 
-export default function NewToolPage() {
+export default async function NewToolPage() {
+  const role = await getUserRole();
+  if (role !== 'admin') {
+    redirect('/?message=' + encodeURIComponent('Přístup odepřen: Nástroje mohou přidávat pouze administrátoři.'));
+  }
+
   return (
     <div className="container">
       <div className="form-page">
