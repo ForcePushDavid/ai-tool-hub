@@ -1,5 +1,6 @@
 import { login, signup } from './actions'
 import SsoButtons from '@/components/SsoButtons'
+import SubmitButton from '@/components/SubmitButton'
 
 export default async function LoginPage({ searchParams }) {
   const { message } = await searchParams
@@ -55,12 +56,12 @@ export default async function LoginPage({ searchParams }) {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <button formAction={login} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+            <SubmitButton formAction={login} variant="primary" style={{ width: '100%', justifyContent: 'center' }}>
               Přihlásit se
-            </button>
-            <button formAction={signup} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+            </SubmitButton>
+            <SubmitButton formAction={signup} variant="secondary" style={{ width: '100%', justifyContent: 'center' }}>
               Vytvořit testovací účet
-            </button>
+            </SubmitButton>
           </div>
         </form>
       </div>
