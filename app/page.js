@@ -43,6 +43,7 @@ export default function HomePage() {
   return (
     <div className="container">
       <section className="hero">
+        <img src="/tourist-signs.png" alt="Rozcestník AI nástrojů" style={{ width: '100%', maxWidth: '350px', margin: '0 auto 2rem', borderRadius: 'var(--radius-md)', display: 'block', border: '2px solid var(--border-color)', boxShadow: '4px 4px 0px var(--border-color)' }} />
         <h1>AI HUB</h1>
         <p>Prozkoumejte schválené nástroje umělé inteligence pro zaměstnance Alzy, zjistěte jejich možnosti a bezpečnostní podmínky.</p>
       </section>
