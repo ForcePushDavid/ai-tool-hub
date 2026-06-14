@@ -1,7 +1,7 @@
 import { login, signup } from './actions'
 import SsoButtons from '@/components/SsoButtons'
 import SubmitButton from '@/components/SubmitButton'
-import ImageMarquee from '@/components/ImageMarquee'
+import ImageSlider from '@/components/ImageMarquee'
 
 export default async function LoginPage({ searchParams }) {
   const { message } = await searchParams
@@ -9,9 +9,10 @@ export default async function LoginPage({ searchParams }) {
   return (
     <div className="login-split-layout">
       <div className="login-marquee-panel">
-        <ImageMarquee />
+        <ImageSlider />
       </div>
       <div className="login-form-panel">
+        <div className="login-form-wrapper">
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.5rem', fontWeight: '800' }}>Přihlášení do Alza AI Hub</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
@@ -67,6 +68,7 @@ export default async function LoginPage({ searchParams }) {
             </SubmitButton>
           </div>
         </form>
+        </div>
       </div>
     </div>
   )

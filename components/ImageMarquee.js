@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function ImageMarquee() {
+export default function ImageSlider() {
+  const [activeIndex, setActiveIndex] = useState(0);
   const images = [
     '/tourist-signs.png',
     '/tourist-midjourney.png',
@@ -9,18 +10,23 @@ export default function ImageMarquee() {
     '/tourist-notion.png',
   ];
 
-  // Zduplikujeme pole obrázků pro plynulý nekonečný efekt (seamless loop)
-  const marqueeImages = [...images, ...images, ...images];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((current) => (current + 1) % images.length);
+    }, 15000); // 15 seconds
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
-    <div className="marquee-container">
-      <div className="marquee-track">
-        {marqueeImages.map((src, index) => (
-          <div key={index} className="marquee-item">
-            <img src={src} alt={`AI Tourist Sign ${index}`} />
-          </div>
-        ))}
-      </div>
+    <div className="slider-container">
+      {images.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt={`AI Sign ${index}`}
+          className={`slider-image ${index === activeIndex ? 'active' : ''}`}
+        />
+      ))}
     </div>
   );
 }
