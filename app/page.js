@@ -1,66 +1,96 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import ToolCard from '@/components/ToolCard';
+
+const categories = ['Vše', 'Text / Konverzace', 'Obrázky', 'Video', 'Audio', 'Kód', 'Prezentace', 'Produktivita', 'Marketing'];
+
+export default function HomePage() {
+  const [tools, setTools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState('Vše');
+
+  const fetchTools = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (search) params.set('search', search);
+      if (activeCategory !== 'Vše') params.set('category', activeCategory);
+
+      const res = await fetch(`/api/tools?${params}`);
+      const data = await res.json();
+      setTools(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching tools:', err);
+      setTools([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTools();
+  }, [activeCategory]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchTools();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="container">
+      <section className="hero">
+        <div className="hero-badge">✨ Firemní katalog AI nástrojů</div>
+        <h1>AI Tool Hub</h1>
+        <p>Prozkoumejte nástroje umělé inteligence, zjistěte jejich možnosti, licenční modely a bezpečnostní podmínky.</p>
+      </section>
+
+      <div className="search-container">
+        <span className="search-icon">🔍</span>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Hledat nástroj..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          id="search-input"
         />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </div>
+
+      <div className="filter-tabs">
+        {categories.map(cat => (
+          <button
+            key={cat}
+            className={`filter-tab ${activeCategory === cat ? 'active' : ''}`}
+            onClick={() => setActiveCategory(cat)}
+            id={`filter-${cat.replace(/\s|\/|/g, '-').toLowerCase()}`}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner" />
+          <p style={{ color: 'var(--text-muted)' }}>Načítám nástroje...</p>
         </div>
-      </main>
+      ) : tools.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-state-icon">🔍</div>
+          <h3>Žádné nástroje nenalezeny</h3>
+          <p>Zkuste změnit vyhledávání nebo kategorii.</p>
+        </div>
+      ) : (
+        <div className="tools-grid" id="tools-grid">
+          {tools.map(tool => (
+            <ToolCard key={tool.id} tool={tool} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
