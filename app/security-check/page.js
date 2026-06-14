@@ -61,7 +61,7 @@ function SecurityCheckContent() {
   return (
     <div className="container">
       <div className="security-page">
-        <h1>🔒 AI Security Checker</h1>
+        <h1>Security Check</h1>
         <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1.05rem' }}>
           Ověřte, zda je bezpečné použít AI nástroj pro váš konkrétní záměr. Systém analyzuje bezpečnostní podmínky nástroje a vyhodnotí rizika z hlediska GDPR a ochrany dat.
         </p>

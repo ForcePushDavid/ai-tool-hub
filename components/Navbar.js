@@ -22,7 +22,7 @@ export default function Navbar({ role }) {
           href="/security-check"
           className={`navbar-link ${pathname === '/security-check' ? 'active' : ''}`}
         >
-          🔒 Security Check
+          Security Check
         </Link>
         {role === 'admin' && (
           <Link href="/tools/new" className="btn btn-primary btn-sm">
