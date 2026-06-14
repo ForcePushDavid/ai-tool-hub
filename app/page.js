@@ -138,6 +138,10 @@ export default function HomePage() {
           </Link>
         </div>
       )}
+
+      <footer style={{ marginTop: '5rem', padding: '2rem 0', textAlign: 'center', borderTop: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+        <p>Vytvořil <strong>David Jeřela</strong> • <a href="mailto:david@jerela.eu" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }}>david@jerela.eu</a></p>
+      </footer>
     </div>
   );
 }
