@@ -9,7 +9,6 @@ export default async function LoginPage({ searchParams }) {
     <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
       <div className="form-card" style={{ maxWidth: '400px', width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div className="navbar-brand-icon" style={{ margin: '0 auto 1rem', width: '48px', height: '48px', fontSize: '1.5rem' }}>👽</div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: '800' }}>Přihlášení do Alza AI Hub</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
             Zadejte své údaje nebo využijte firemní SSO.
