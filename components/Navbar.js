@@ -10,7 +10,7 @@ export default function Navbar() {
     <nav className="navbar">
       <Link href="/" className="navbar-brand">
         <div className="navbar-brand-icon">👽</div>
-        <span>Alza AI Hub</span>
+        <span>AI HUB</span>
       </Link>
       <div className="navbar-links">
         <Link

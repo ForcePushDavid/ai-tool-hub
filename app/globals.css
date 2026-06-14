@@ -85,7 +85,7 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(10, 10, 15, 0.8);
+  background: var(--bg-secondary);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
   padding: 0 2rem;
@@ -334,20 +334,23 @@ body {
 
 .badge {
   padding: 0.2rem 0.6rem;
-  border-radius: 999px;
+  border-radius: var(--radius-md);
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border: 2px solid var(--border-color);
+  box-shadow: 2px 2px 0px var(--border-color);
+  color: var(--text-primary);
 }
 
-.badge-free { background: var(--success-bg); color: var(--success); }
-.badge-freemium { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
-.badge-paid { background: var(--warning-bg); color: var(--warning); }
-.badge-enterprise { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
-.badge-category { background: var(--bg-glass); color: var(--text-secondary); border: 1px solid var(--border-color); }
-.badge-gdpr-yes { background: var(--success-bg); color: var(--success); }
-.badge-gdpr-no { background: var(--danger-bg); color: var(--danger); }
+.badge-free { background: var(--success-bg); }
+.badge-freemium { background: #e0e7ff; }
+.badge-paid { background: var(--warning-bg); }
+.badge-enterprise { background: #fce7f3; }
+.badge-category { background: var(--bg-primary); }
+.badge-gdpr-yes { background: var(--success-bg); }
+.badge-gdpr-no { background: var(--danger-bg); }
 
 .tool-card-name {
   font-size: 1.15rem;
