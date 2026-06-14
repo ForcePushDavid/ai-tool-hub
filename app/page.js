@@ -43,9 +43,9 @@ export default function HomePage() {
   return (
     <div className="container">
       <section className="hero">
-        <div className="hero-badge">✨ Firemní katalog AI nástrojů</div>
-        <h1>AI Tool Hub</h1>
-        <p>Prozkoumejte nástroje umělé inteligence, zjistěte jejich možnosti, licenční modely a bezpečnostní podmínky.</p>
+        <div className="hero-badge">✨ Interní AI Katalog Alza.cz</div>
+        <h1>Alza AI Hub</h1>
+        <p>Prozkoumejte schválené nástroje umělé inteligence pro zaměstnance Alzy, zjistěte jejich možnosti a bezpečnostní podmínky.</p>
       </section>
 
       <div className="search-container">

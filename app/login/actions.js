@@ -17,7 +17,7 @@ export async function login(formData) {
   })
 
   if (error) {
-    return redirect('/login?message=Neplatný e-mail nebo heslo')
+    return redirect('/login?message=' + encodeURIComponent('Neplatný e-mail nebo heslo'))
   }
 
   revalidatePath('/', 'layout')
@@ -36,7 +36,7 @@ export async function signup(formData) {
   })
 
   if (error) {
-    return redirect('/login?message=Nepodařilo se vytvořit účet: ' + error.message)
+    return redirect('/login?message=' + encodeURIComponent('Nepodařilo se vytvořit účet: ' + error.message))
   }
 
   revalidatePath('/', 'layout')

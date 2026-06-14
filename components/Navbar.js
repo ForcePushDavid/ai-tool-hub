@@ -9,8 +9,8 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link href="/" className="navbar-brand">
-        <div className="navbar-brand-icon">🤖</div>
-        <span>AI Tool Hub</span>
+        <div className="navbar-brand-icon">👽</div>
+        <span>Alza AI Hub</span>
       </Link>
       <div className="navbar-links">
         <Link

@@ -3,8 +3,8 @@ import Navbar from '@/components/Navbar';
 import ChatBot from '@/components/ChatBot';
 
 export const metadata = {
-  title: 'AI Tool Hub | Firemní katalog AI nástrojů',
-  description: 'Přehledný katalog AI aplikací s inteligentním chatbotem. Vyhledávejte AI nástroje, zjistěte licenční modely, bezpečnostní podmínky a tipy pro efektivní využití.',
+  title: 'Alza AI Hub',
+  description: 'Interní katalog AI nástrojů pro zaměstnance Alza.cz',
 };
 
 export default function RootLayout({ children }) {
