@@ -1,13 +1,17 @@
 import { login, signup } from './actions'
 import SsoButtons from '@/components/SsoButtons'
 import SubmitButton from '@/components/SubmitButton'
+import ImageMarquee from '@/components/ImageMarquee'
 
 export default async function LoginPage({ searchParams }) {
   const { message } = await searchParams
 
   return (
-    <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <div className="form-card" style={{ maxWidth: '400px', width: '100%' }}>
+    <div className="login-split-layout">
+      <div className="login-marquee-panel">
+        <ImageMarquee />
+      </div>
+      <div className="login-form-panel">
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.5rem', fontWeight: '800' }}>Přihlášení do Alza AI Hub</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>

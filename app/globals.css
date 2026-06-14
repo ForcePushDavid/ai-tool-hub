@@ -821,3 +821,101 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* =========================================
+   LOGIN PAGE SPLIT LAYOUT
+   ========================================= */
+.login-split-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.login-marquee-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border-right: 4px solid var(--border-color);
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-primary);
+}
+
+.login-form-panel {
+  width: 450px;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 10;
+  box-shadow: -8px 0px 0px var(--border-color);
+}
+
+@media (max-width: 900px) {
+  .login-split-layout {
+    flex-direction: column;
+  }
+  .login-form-panel {
+    width: 100%;
+    box-shadow: none;
+    border-top: 4px solid var(--border-color);
+    min-height: 100vh;
+  }
+  .login-marquee-panel {
+    display: none; /* Hide images on small screens to save space */
+  }
+}
+
+/* =========================================
+   IMAGE MARQUEE
+   ========================================= */
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  background: var(--bg-primary);
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: 2rem;
+  animation: scroll-marquee 40s linear infinite;
+  padding: 1rem;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  width: 300px;
+  height: 300px;
+  flex-shrink: 0;
+  border: 4px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 8px 8px 0px var(--border-color);
+  transition: transform 0.3s ease;
+  background: #fff;
+}
+
+.marquee-item:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 12px 12px 0px var(--border-color);
+}
+
+.marquee-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
