@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import { getGeminiModel } from '@/lib/gemini';
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
 export async function POST(request) {
   try {
@@ -27,7 +29,20 @@ export async function POST(request) {
       );
     }
 
+    // Read GDPR law text
+    const gdprFilePath = path.join(process.cwd(), 'lib', 'gdpr.txt');
+    let gdprText = '';
+    try {
+      gdprText = fs.readFileSync(gdprFilePath, 'utf8');
+    } catch (err) {
+      console.warn('Could not read gdpr.txt');
+    }
+
     const prompt = `Jsi bezpečnostní expert pro firemní data (GDPR, NDA, ochrana osobních údajů). Analyzuj následující situaci a vyhodnoť bezpečnostní rizika.
+Při hodnocení se PŘÍSNĚ řiď následujícím Zákonem o zpracování osobních údajů (GDPR):
+--- TEXT ZÁKONA GDPR ---
+${gdprText}
+-------------------------
 
 NÁSTROJ: ${tool.name}
 Kategorie: ${tool.category}
@@ -44,15 +59,15 @@ Analyzuj a odpověz PŘESNĚ v tomto JSON formátu (nic jiného):
 {
   "verdict": "safe" | "risky" | "dangerous",
   "verdict_label": "Bezpečné" | "Rizikové" | "Nebezpečné",
-  "summary": "Krátké shrnutí verdiktu (1-2 věty)",
+  "summary": "Krátké shrnutí verdiktu (1-2 věty) s odkazem na zákon.",
   "sensitive_data": ["seznam identifikovaných citlivých dat v záměru uživatele"],
-  "risks": ["seznam konkrétních rizik"],
-  "gdpr_analysis": "Analýza z hlediska GDPR",
+  "risks": ["seznam konkrétních rizik z pohledu zákona"],
+  "gdpr_analysis": "Detailní analýza z hlediska konkrétních paragrafů a zásad GDPR uvedených v textu zákona.",
   "recommendations": ["seznam doporučení pro bezpečné použití"]
 }
 
 Pravidla pro hodnocení:
-- "dangerous": Data obsahují osobní údaje (e-maily, jména, RČ, telefony) A nástroj není GDPR compliant nebo data používá pro trénink
+- "dangerous": Data obsahují osobní údaje (e-maily, jména, RČ, telefony) A nástroj není GDPR compliant nebo data používá pro trénink. Porušení zásad zákona!
 - "risky": Data mohou obsahovat citlivé informace A existují určitá bezpečnostní omezení
 - "safe": Data neobsahují citlivé informace NEBO nástroj je plně GDPR compliant s izolací dat
 

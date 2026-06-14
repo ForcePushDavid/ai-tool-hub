@@ -1,0 +1,31 @@
+ČÁST PRVNÍ
+ZPRACOVÁNÍ OSOBNÍCH ÚDAJŮ
+HLAVA I
+ZÁKLADNÍ USTANOVENÍ
+§ 1 Předmět úpravy
+Tento zákon zapracovává příslušné předpisy Evropské unie, zároveň navazuje na přímo použitelný předpis Evropské unie (GDPR) a k naplnění práva každého na ochranu soukromí upravuje práva a povinnosti při zpracování osobních údajů.
+
+§ 2 Působnost zákona
+Tento zákon upravuje zpracování osobních údajů podle nařízení Evropského parlamentu a Rady (EU) 2016/679 (GDPR).
+
+§ 3 Subjekt údajů
+Subjektem údajů se rozumí fyzická osoba, k níž se osobní údaje vztahují.
+
+DŮLEŽITÉ ZÁSADY GDPR (Shrnutí pro AI Security Check):
+1. Zákonnost, korektnost, transparentnost: Zpracování musí mít právní základ (souhlas, plnění smlouvy, oprávněný zájem atd.).
+2. Účelové omezení: Údaje musí být shromažďovány jen pro určité a legitimní účely.
+3. Minimalizace údajů: Zpracovávat jen údaje nezbytné pro daný účel.
+4. Přesnost: Osobní údaje musí být přesné a aktuální.
+5. Omezení uložení: Údaje se uchovávají jen po dobu nezbytnou.
+6. Integrita a důvěrnost (Bezpečnost): Osobní údaje musí být chráněny před neoprávněným přístupem a ztrátou.
+
+Citlivé údaje (Zvláštní kategorie osobních údajů):
+Patří sem údaje o zdravotním stavu, biometrické a genetické údaje, rasový či etnický původ, politické názory, náboženské vyznání. Jejich zpracování je zakázáno, pokud neplatí přísné výjimky.
+
+Přenos dat do třetích zemí (mimo EU/EHP):
+Předání je možné jen pokud třetí země zajišťuje odpovídající úroveň ochrany, nebo jsou poskytnuty vhodné záruky (např. standardní smluvní doložky SCC).
+
+Závazek mlčenlivosti (NDA) a firemní data:
+Pokud zaměstnanec vkládá data zákazníků do AI nástrojů, které je ukládají pro svůj vlastní trénink (nemají "zero data retention" politiku), jde o závažné porušení GDPR a bezpečnostní incident.
+
+Tento text slouží jako znalostní báze pro Security Checker. AI asistent z něj smí volně citovat při svém hodnocení a musí se na něj odkazovat.
