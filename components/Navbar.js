@@ -28,6 +28,12 @@ export default function Navbar() {
         <Link href="/tools/new" className="btn btn-primary btn-sm">
           + Přidat nástroj
         </Link>
+        <button onClick={async () => {
+          const { logout } = await import('@/app/login/actions');
+          await logout();
+        }} className="btn btn-secondary btn-sm" style={{ marginLeft: '0.5rem' }}>
+          Odhlásit
+        </button>
       </div>
     </nav>
   );

@@ -1,0 +1,50 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server'
+
+export async function login(formData) {
+  const supabase = await createClient()
+
+  // data from form
+  const email = formData.get('email')
+  const password = formData.get('password')
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+
+  if (error) {
+    return redirect('/login?message=Neplatný e-mail nebo heslo')
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/')
+}
+
+export async function signup(formData) {
+  const supabase = await createClient()
+
+  const email = formData.get('email')
+  const password = formData.get('password')
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+
+  if (error) {
+    return redirect('/login?message=Nepodařilo se vytvořit účet: ' + error.message)
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/')
+}
+
+export async function logout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/login')
+}
