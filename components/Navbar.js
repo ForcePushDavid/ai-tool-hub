@@ -9,7 +9,6 @@ export default function Navbar({ role }) {
   return (
     <nav className="navbar">
       <Link href="/" className="navbar-brand">
-        <div className="navbar-brand-icon">👽</div>
         <span>AI HUB</span>
       </Link>
       <div className="navbar-links">

@@ -578,7 +578,7 @@ body {
 }
 
 .chatbot-toggle:hover { transform: scale(1.1); }
-.chatbot-toggle.open { background: var(--bg-secondary); border: 1px solid var(--border-color); }
+.chatbot-toggle.open { background: var(--bg-secondary); border: 2px solid var(--border-color); color: var(--text-primary); }
 
 .chatbot-window {
   position: fixed;
