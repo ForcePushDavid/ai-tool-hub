@@ -6,10 +6,11 @@ export async function POST(request) {
   try {
     const { message, history } = await request.json();
 
-    // Fetch ALL current tools from database (live data!)
+    // Fetch ONLY approved tools from database (live data!)
     const { data: tools, error } = await supabase
       .from('tools')
       .select('*')
+      .eq('status', 'approved')
       .order('name');
 
     if (error) throw error;

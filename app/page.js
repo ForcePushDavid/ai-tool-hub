@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import ToolCard from '@/components/ToolCard';
+import { createClient } from '@/utils/supabase/client';
 
 const categories = ['Vše', 'Text / Konverzace', 'Obrázky', 'Video', 'Audio', 'Kód', 'Prezentace', 'Produktivita', 'Marketing'];
 
@@ -10,6 +12,20 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('Vše');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [pendingTools, setPendingTools] = useState([]);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+        setIsAdmin(data?.role === 'admin');
+      }
+    };
+    checkAdmin();
+  }, []);
 
   const fetchTools = async () => {
     setLoading(true);
@@ -21,9 +37,16 @@ export default function HomePage() {
       const res = await fetch(`/api/tools?${params}`);
       const data = await res.json();
       setTools(Array.isArray(data) ? data : []);
+
+      if (isAdmin) {
+        const pendingRes = await fetch('/api/tools?status=pending');
+        const pendingData = await pendingRes.json();
+        setPendingTools(Array.isArray(pendingData) ? pendingData : []);
+      }
     } catch (err) {
       console.error('Error fetching tools:', err);
       setTools([]);
+      setPendingTools([]);
     } finally {
       setLoading(false);
     }
@@ -31,7 +54,7 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchTools();
-  }, [activeCategory]);
+  }, [activeCategory, isAdmin]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -72,6 +95,19 @@ export default function HomePage() {
         ))}
       </div>
 
+      {isAdmin && pendingTools.length > 0 && (
+        <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--accent-primary)' }}>
+          <h2 style={{ color: 'var(--accent-primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            ⏳ Nástroje ke schválení ({pendingTools.length})
+          </h2>
+          <div className="tools-grid">
+            {pendingTools.map(tool => (
+              <ToolCard key={tool.id} tool={tool} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="loading-container">
           <div className="loading-spinner" />
@@ -88,6 +124,18 @@ export default function HomePage() {
           {tools.map(tool => (
             <ToolCard key={tool.id} tool={tool} />
           ))}
+        </div>
+      )}
+
+      {!isAdmin && (
+        <div style={{ marginTop: '4rem', textAlign: 'center', padding: '3rem', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-lg)' }}>
+          <h3 style={{ marginBottom: '1rem' }}>Hledáte něco jiného?</h3>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+            Nenašli jste nástroj, který používáte? Navrhněte ho a my ho po bezpečnostní kontrole zařadíme do katalogu.
+          </p>
+          <Link href="/tools/new" className="btn btn-primary" style={{ display: 'inline-flex' }}>
+            Navrhnout nový nástroj
+          </Link>
         </div>
       )}
     </div>

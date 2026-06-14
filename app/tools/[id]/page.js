@@ -47,6 +47,21 @@ export default function ToolDetailPage({ params }) {
     }
   };
 
+  const handleApprove = async () => {
+    try {
+      await fetch(`/api/tools/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'approve' }),
+      });
+      // Refresh the local state
+      setTool(prev => ({ ...prev, status: 'approved' }));
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="container">
@@ -87,10 +102,18 @@ export default function ToolDetailPage({ params }) {
               ) : (
                 <span className="badge badge-gdpr-no">⚠ GDPR – ověřte</span>
               )}
+              {tool.status === 'pending' && (
+                <span className="badge badge-danger">⏳ Ke schválení</span>
+              )}
             </div>
           </div>
           {isAdmin && (
             <div className="tool-detail-actions">
+              {tool.status === 'pending' && (
+                <button className="btn btn-primary" onClick={handleApprove} style={{ background: 'var(--success)' }}>
+                  ✅ Schválit nástroj
+                </button>
+              )}
               <Link href={`/tools/${id}/edit`} className="btn btn-secondary" id="btn-edit">✏️ Upravit</Link>
               <button className="btn btn-danger" onClick={() => setShowDeleteModal(true)} id="btn-delete">🗑️ Smazat</button>
             </div>
@@ -101,6 +124,13 @@ export default function ToolDetailPage({ params }) {
           <h2>📝 Popis</h2>
           <p>{tool.description}</p>
         </div>
+
+        {isAdmin && tool.request_reason && (
+          <div className="tool-detail-section" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius-md)', borderLeft: '4px solid var(--accent-primary)' }}>
+            <h2>👤 Důvod žádosti od uživatele</h2>
+            <p style={{ fontStyle: 'italic' }}>{tool.request_reason}</p>
+          </div>
+        )}
 
         {tool.tips && (
           <div className="tool-detail-section">

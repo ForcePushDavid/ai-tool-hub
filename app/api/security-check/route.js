@@ -15,11 +15,12 @@ export async function POST(request) {
       );
     }
 
-    // Fetch the specific tool
+    // Fetch the specific tool only if it's approved
     const { data: tool, error } = await supabase
       .from('tools')
       .select('*')
       .eq('id', toolId)
+      .eq('status', 'approved')
       .single();
 
     if (error || !tool) {

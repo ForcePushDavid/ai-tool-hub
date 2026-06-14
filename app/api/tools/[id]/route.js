@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import { getUserRole } from '@/utils/auth';
+import { createClient } from '@/utils/supabase/server';
 
 // GET /api/tools/[id]
 export async function GET(request, { params }) {
@@ -22,10 +24,16 @@ export async function GET(request, { params }) {
 // PUT /api/tools/[id]
 export async function PUT(request, { params }) {
   try {
+    const role = await getUserRole();
+    if (role !== 'admin') {
+      return NextResponse.json({ error: 'Přístup odepřen' }, { status: 403 });
+    }
+    const supabaseServer = await createClient();
+
     const { id } = await params;
     const body = await request.json();
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseServer
       .from('tools')
       .update({
         name: body.name,
@@ -55,14 +63,50 @@ export async function PUT(request, { params }) {
 // DELETE /api/tools/[id]
 export async function DELETE(request, { params }) {
   try {
+    const role = await getUserRole();
+    if (role !== 'admin') {
+      return NextResponse.json({ error: 'Přístup odepřen' }, { status: 403 });
+    }
+    const supabaseServer = await createClient();
+
     const { id } = await params;
-    const { error } = await supabase
+    const { error } = await supabaseServer
       .from('tools')
       .delete()
       .eq('id', id);
 
     if (error) throw error;
     return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+// PATCH /api/tools/[id]
+export async function PATCH(request, { params }) {
+  try {
+    const role = await getUserRole();
+    if (role !== 'admin') {
+      return NextResponse.json({ error: 'Přístup odepřen' }, { status: 403 });
+    }
+    const supabaseServer = await createClient();
+
+    const { id } = await params;
+    const body = await request.json();
+
+    if (body.action === 'approve') {
+      const { data, error } = await supabaseServer
+        .from('tools')
+        .update({ status: 'approved' })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return NextResponse.json(data);
+    }
+    
+    return NextResponse.json({ error: 'Neznámá akce' }, { status: 400 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

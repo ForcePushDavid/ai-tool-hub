@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 const categories = [
   'Text / Konverzace',
@@ -21,6 +22,7 @@ export default function ToolForm({ tool, isEditing }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isAdmin, setIsAdmin] = useState(true); // Default to true to prevent flickering before fetch
   const [formData, setFormData] = useState({
     name: tool?.name || '',
     description: tool?.description || '',
@@ -33,7 +35,22 @@ export default function ToolForm({ tool, isEditing }) {
     gdpr_compliant: tool?.gdpr_compliant || false,
     data_retention: tool?.data_retention || '',
     security_notes: tool?.security_notes || '',
+    request_reason: tool?.request_reason || '',
   });
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+        setIsAdmin(data?.role === 'admin');
+      } else {
+        setIsAdmin(false);
+      }
+    };
+    checkAdmin();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -103,6 +120,24 @@ export default function ToolForm({ tool, isEditing }) {
           id="input-description"
         />
       </div>
+
+      {!isAdmin && !isEditing && (
+        <div className="form-group">
+          <label className="form-label" style={{ color: 'var(--accent-primary)' }}>
+            Důvod žádosti / K čemu budete nástroj využívat? *
+          </label>
+          <textarea
+            name="request_reason"
+            value={formData.request_reason}
+            onChange={handleChange}
+            className="form-textarea"
+            placeholder="Zde popište, jaké konkrétní úkoly chcete pomocí tohoto nástroje řešit..."
+            required
+            id="input-request-reason"
+            style={{ borderColor: 'var(--accent-primary)' }}
+          />
+        </div>
+      )}
 
       <div className="form-row">
         <div className="form-group">
@@ -212,7 +247,7 @@ export default function ToolForm({ tool, isEditing }) {
 
       <div className="form-actions">
         <button type="submit" className="btn btn-primary btn-lg" disabled={loading} id="btn-submit">
-          {loading ? 'Ukládám...' : (isEditing ? 'Uložit změny' : 'Přidat nástroj')}
+          {loading ? 'Zpracovávám...' : (isEditing ? 'Uložit změny' : (isAdmin ? 'Přidat nástroj' : 'Odeslat ke schválení'))}
         </button>
         <button type="button" className="btn btn-secondary btn-lg" onClick={() => router.back()} id="btn-cancel">
           Zrušit

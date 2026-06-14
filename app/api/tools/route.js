@@ -10,8 +10,13 @@ export async function GET(request) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     const pricing = searchParams.get('pricing');
+    const status = searchParams.get('status') || 'approved';
 
     let query = supabase.from('tools').select('*').order('name');
+    
+    if (status !== 'all') {
+      query = query.eq('status', status);
+    }
 
     if (category && category !== 'Vše') {
       query = query.eq('category', category);
@@ -36,10 +41,6 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const role = await getUserRole();
-    if (role !== 'admin') {
-      return NextResponse.json({ error: 'Přístup odepřen: Nástroje mohou přidávat pouze administrátoři.' }, { status: 403 });
-    }
-
     const supabaseServer = await createClient();
     const body = await request.json();
     
@@ -57,6 +58,8 @@ export async function POST(request) {
         gdpr_compliant: body.gdpr_compliant ?? false,
         data_retention: body.data_retention,
         security_notes: body.security_notes,
+        status: role === 'admin' ? 'approved' : 'pending',
+        request_reason: role === 'admin' ? null : body.request_reason,
       }])
       .select()
       .single();
