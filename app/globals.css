@@ -34,29 +34,7 @@
   --transition-slow: 0.2s ease-out;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #09090b;
-    --bg-secondary: #18181b;
-    --bg-card: #18181b;
-    --bg-card-hover: #1f1f22;
-    --bg-glass: rgba(255, 255, 255, 0.05);
-    --border-color: #3f3f46;
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
-    --accent-primary: #00a651;
-    --accent-secondary: #ffffff;
-    --accent-gradient: #00a651;
-    --accent-gradient-hover: #00b85a;
-    --danger-bg: rgba(239, 68, 68, 0.2);
-    --success-bg: rgba(0, 166, 81, 0.2);
-    --warning-bg: rgba(245, 158, 11, 0.2);
-    --shadow-sm: 2px 2px 0px #00a651;
-    --shadow-md: 4px 4px 0px #00a651;
-    --shadow-lg: 6px 6px 0px #00a651;
-  }
-}
+
 
 * {
   margin: 0;
