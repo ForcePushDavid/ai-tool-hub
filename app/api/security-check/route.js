@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import { getGeminiModel } from '@/lib/gemini';
+import { NextResponse } from 'next/server';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {
@@ -58,9 +58,28 @@ Pravidla pro hodnocení:
 
 Odpověz POUZE validním JSON objektem, žádný markdown, žádné code blocks.`;
 
-    const model = getGeminiModel();
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text().trim();
+    const openRouterResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "model": "google/gemini-2.0-flash:free",
+        "messages": [
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+
+    if (!openRouterResponse.ok) {
+      const errText = await openRouterResponse.text();
+      console.error('OpenRouter error:', errText);
+      throw new Error(`OpenRouter API error: ${openRouterResponse.status}`);
+    }
+
+    const data = await openRouterResponse.json();
+    const responseText = data.choices[0].message.content.trim();
 
     // Parse JSON from response (handle potential markdown wrapping)
     let analysis;
