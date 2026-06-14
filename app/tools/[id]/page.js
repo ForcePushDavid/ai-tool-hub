@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 export default function ToolDetailPage({ params }) {
   const { id } = use(params);
@@ -11,6 +12,7 @@ export default function ToolDetailPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     fetch(`/api/tools/${id}`)
@@ -20,6 +22,16 @@ export default function ToolDetailPage({ params }) {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    const checkAdmin = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+        setIsAdmin(data?.role === 'admin');
+      }
+    };
+    checkAdmin();
   }, [id]);
 
   const handleDelete = async () => {
@@ -77,10 +89,12 @@ export default function ToolDetailPage({ params }) {
               )}
             </div>
           </div>
-          <div className="tool-detail-actions">
-            <Link href={`/tools/${id}/edit`} className="btn btn-secondary" id="btn-edit">✏️ Upravit</Link>
-            <button className="btn btn-danger" onClick={() => setShowDeleteModal(true)} id="btn-delete">🗑️ Smazat</button>
-          </div>
+          {isAdmin && (
+            <div className="tool-detail-actions">
+              <Link href={`/tools/${id}/edit`} className="btn btn-secondary" id="btn-edit">✏️ Upravit</Link>
+              <button className="btn btn-danger" onClick={() => setShowDeleteModal(true)} id="btn-delete">🗑️ Smazat</button>
+            </div>
+          )}
         </div>
 
         <div className="tool-detail-section">
