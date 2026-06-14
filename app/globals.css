@@ -805,10 +805,11 @@ body {
    ========================================= */
 .login-split-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   overflow: hidden;
   background: var(--bg-primary);
+  margin-top: -64px; /* Counteract .main-content padding-top */
 }
 
 .login-marquee-panel {
