@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { getGeminiModel } from '@/lib/gemini';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {
@@ -49,37 +50,24 @@ ${catalogContext}
 
 Důležité: Tyto údaje jsou aktuální data z databáze. Odpovídej výhradně na jejich základě.`;
 
-    // Build conversation history for context
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      { role: 'assistant', content: 'Rozumím. Jsem AI asistent pro firemní katalog AI nástrojů. Odpovídám na základě aktuálních dat z katalogu. Jak vám mohu pomoci?' },
-      ...(history || []).map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'assistant',
-        content: msg.content
-      })),
-      { role: 'user', content: message }
-    ];
+    const model = getGeminiModel();
 
-    const openRouterResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "model": "google/gemini-2.0-flash:free",
-        "messages": messages
-      })
+    // Build conversation history for context
+    const chatHistory = (history || []).map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }],
+    }));
+
+    const chat = model.startChat({
+      history: [
+        { role: 'user', parts: [{ text: 'Systémové instrukce: ' + systemPrompt }] },
+        { role: 'model', parts: [{ text: 'Rozumím. Jsem AI asistent pro firemní katalog AI nástrojů. Odpovídám na základě aktuálních dat z katalogu. Jak vám mohu pomoci?' }] },
+        ...chatHistory,
+      ],
     });
 
-    if (!openRouterResponse.ok) {
-      const errText = await openRouterResponse.text();
-      console.error('OpenRouter error:', errText);
-      throw new Error(`OpenRouter API error: ${openRouterResponse.status}`);
-    }
-
-    const data = await openRouterResponse.json();
-    const response = data.choices[0].message.content;
+    const result = await chat.sendMessage(message);
+    const response = result.response.text();
 
     return NextResponse.json({ response });
   } catch (error) {
