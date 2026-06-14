@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function ChatBot() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -77,6 +79,8 @@ export default function ChatBot() {
       .replace(/^- (.*)/gm, '<li>$1</li>')
       .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
   };
+
+  if (pathname === '/login') return null;
 
   return (
     <>

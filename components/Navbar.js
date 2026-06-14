@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 export default function Navbar({ role }) {
   const pathname = usePathname();
 
+  if (pathname === '/login') return null;
+
   return (
     <nav className="navbar">
       <Link href="/" className="navbar-brand">
