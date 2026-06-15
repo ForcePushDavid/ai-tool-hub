@@ -111,7 +111,14 @@ export default function ToolForm({ tool, isEditing }) {
       }
 
       const data = await res.json();
-      router.push(`/tools/${data.id}`);
+      
+      if (data.pending) {
+        alert('Děkujeme! Nástroj byl odeslán a čeká na schválení administrátorem.');
+        router.push('/');
+      } else {
+        router.push(`/tools/${data.id}`);
+      }
+      
       router.refresh();
     } catch (err) {
       setError(err.message);

@@ -44,7 +44,7 @@ export async function POST(request) {
     const supabaseServer = await createClient();
     const body = await request.json();
     
-    const { data, error } = await supabaseServer
+    let query = supabaseServer
       .from('tools')
       .insert([{
         name: body.name,
@@ -60,12 +60,17 @@ export async function POST(request) {
         security_notes: body.security_notes,
         status: role === 'admin' ? 'approved' : 'pending',
         request_reason: role === 'admin' ? null : body.request_reason,
-      }])
-      .select()
-      .single();
+      }]);
+
+    if (role === 'admin') {
+      query = query.select().single();
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
-    return NextResponse.json(data, { status: 201 });
+    
+    return NextResponse.json(data || { success: true, pending: true }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
