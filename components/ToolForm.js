@@ -21,6 +21,7 @@ const licenseTypes = ['Osobní', 'Firemní', 'Obojí', 'Open Source'];
 export default function ToolForm({ tool, isEditing }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [autofilling, setAutofilling] = useState(false);
   const [error, setError] = useState('');
   const [isAdmin, setIsAdmin] = useState(true); // Default to true to prevent flickering before fetch
   const [formData, setFormData] = useState({
@@ -60,6 +61,35 @@ export default function ToolForm({ tool, isEditing }) {
     }));
   };
 
+  const handleAutofill = async () => {
+    if (!formData.name || formData.name.trim().length < 2) {
+      setError('Nejdříve vyplňte název nástroje pro předvyplnění.');
+      return;
+    }
+    setAutofilling(true);
+    setError('');
+    
+    try {
+      const res = await fetch('/api/tools/autofill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: formData.name }),
+      });
+      
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Nepodařilo se předvyplnit nástroj.');
+      }
+      
+      const data = await res.json();
+      setFormData(prev => ({ ...prev, ...data }));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setAutofilling(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -96,16 +126,28 @@ export default function ToolForm({ tool, isEditing }) {
 
       <div className="form-group">
         <label className="form-label">Název nástroje *</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className="form-input"
-          placeholder="např. ChatGPT"
-          required
-          id="input-name"
-        />
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="form-input"
+            placeholder="např. ChatGPT"
+            required
+            id="input-name"
+            style={{ flex: 1 }}
+          />
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            onClick={handleAutofill}
+            disabled={autofilling || !formData.name}
+            style={{ whiteSpace: 'nowrap' }}
+          >
+            {autofilling ? '⏳ Generuji...' : '✨ Předvyplnit pomocí AI'}
+          </button>
+        </div>
       </div>
 
       <div className="form-group">
