@@ -30,7 +30,15 @@ export default async function LoginPage({ searchParams }) {
 
         <form>
           {message && (
-            <div className="toast-error" style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '1rem', fontSize: '0.85rem' }}>
+            <div style={{
+              padding: '0.75rem',
+              borderRadius: 'var(--radius-sm)',
+              marginBottom: '1rem',
+              fontSize: '0.85rem',
+              background: message.startsWith('✅') ? '#e8f5e9' : '#fdecea',
+              color: message.startsWith('✅') ? '#2e7d32' : '#c62828',
+              border: message.startsWith('✅') ? '1px solid #a5d6a7' : '1px solid #ef9a9a',
+            }}>
               {message}
             </div>
           )}

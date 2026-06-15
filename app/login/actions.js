@@ -39,8 +39,7 @@ export async function signup(formData) {
     return redirect('/login?message=' + encodeURIComponent('Nepodařilo se vytvořit účet: ' + error.message))
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/login?message=' + encodeURIComponent('✅ Účet vytvořen! Zkontrolujte svůj e-mail a potvrďte registraci kliknutím na odkaz, který jsme vám zaslali.'))
 }
 
 export async function logout() {
