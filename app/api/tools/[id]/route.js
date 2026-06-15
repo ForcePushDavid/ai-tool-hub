@@ -26,7 +26,7 @@ export async function PUT(request, { params }) {
   try {
     const role = await getUserRole();
     if (role !== 'admin') {
-      return NextResponse.json({ error: 'Přístup odepřen' }, { status: 403 });
+      return NextResponse.json({ error: 'Přístup odepřen: Nejste admin.' }, { status: 403 });
     }
     const supabaseServer = await createClient();
 
@@ -53,10 +53,14 @@ export async function PUT(request, { params }) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase Update Error:', error);
+      return NextResponse.json({ error: 'DB chyba: ' + error.message, details: error }, { status: 500 });
+    }
     return NextResponse.json(data);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Server Error in PUT:', error);
+    return NextResponse.json({ error: 'Server chyba: ' + error.message }, { status: 500 });
   }
 }
 
